@@ -10,6 +10,7 @@ Spectral-Enhanced Cross-domain Network (SEC) is a daily runoff forecasting model
 
 - `sec_model.py`: SEC model implementation.
 - `requirements.txt`: dependency list.
+- `example_data/`: example station data for input format reference.
 
 ## Usage
 
