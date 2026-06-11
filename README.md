@@ -1,40 +1,36 @@
 # SEC Reproducibility Package
 
-This repository contains the SEC model implementation together with the minimal supplementary scripts needed to clarify the two benchmark details requested in review: the HBV calibration settings and the ARIMA order selection procedure.
+This repository contains the SEC model implementation together with the supplementary scripts and files needed to clarify reproducibility, especially the ARIMA order selection procedure and the HBV calibration settings mentioned in review.
 
-## Files
+## Repository contents
 
 - `sec_model.py`: SEC architecture.
-- `data_utils.py`: shared preprocessing, split, windowing, scaling, and metric utilities.
-- `benchmark_models.py`: ARIMA and HBV implementations used by the supplementary scripts.
-- `preprocess_data.py`: clean raw station CSV files and save processed copies.
+- `run_sec.py`: train and evaluate SEC on one station split. By default, it uses 10 random seeds and batch size 512.
+- `data_utils.py`: shared preprocessing, split, scaling, windowing, and metric utilities.
+- `preprocess_data.py`: preprocess raw station data.
 - `make_splits.py`: generate fixed train/validation/test split files.
-- `run_sec.py`: train and evaluate SEC on one station split using 10 random seeds by default.
-- `select_arima_order.py`: search ARIMA `(p,d,q)` using validation performance.
-- `run_hbv.py`: calibrate and evaluate the HBV benchmark.
-- `arima_orders.csv`: selected ARIMA orders.
-- `hbv_calibration_settings.yaml`: explicit HBV calibration configuration.
-- `hbv_calibrated_params.csv`: placeholder table for final calibrated HBV parameters.
-- `splits/`: fixed split files.
-- `example_data/`: example station data and format notes.
+- `benchmark_models.py`: ARIMA and HBV implementations used by the supplementary scripts.
+- `select_arima_order.py`: ARIMA order selection script.
+- `run_hbv.py`: HBV calibration and evaluation script.
+- `arima_orders.csv`: final selected ARIMA orders.
+- `hbv_calibration_settings.yaml`: explicit HBV calibration settings.
+- `hbv_calibrated_params.csv`: calibrated HBV parameter table.
+- `splits/`: fixed train/validation/test split files.
+- `example_data/`: example data and format notes.
 
 ## Data format
 
-Expected input is a station-level CSV file with:
+Expected input is a station-level CSV file containing:
 
 - one `date` column
-- meteorological feature columns such as `dayl`, `prcp`, `srad`, `tmax`, `tmin`, `vp`
+- meteorological feature columns such as `dayl`, `prcp`, `srad`, `tmax`, `tmin`, and `vp`
 - one runoff target column named `OT`
 
-The sample file in `example_data/sample_station_data/sample_station_data.csv` follows this schema.
+The sample file in `example_data/sample_station_data/sample_station_data.csv` follows this format.
 
-## Reproduction workflow
+## Reproducibility workflow
 
-Run the commands below from the `SEC_GitHub` directory:
-
-```bash
-cd SEC_GitHub
-```
+Run the commands below from the repository root.
 
 1. Preprocess the raw station file.
 
@@ -42,7 +38,7 @@ cd SEC_GitHub
 python preprocess_data.py --input example_data/sample_station_data/sample_station_data.csv --output outputs/sample_station_processed.csv
 ```
 
-2. Generate a fixed split file.
+2. Generate or inspect the fixed split file.
 
 ```bash
 python make_splits.py --input example_data/sample_station_data/sample_station_data.csv --output splits/sample_station_data_split.json --seq-len 7 --pred-len 1
@@ -54,13 +50,13 @@ python make_splits.py --input example_data/sample_station_data/sample_station_da
 python run_sec.py --data example_data/sample_station_data/sample_station_data.csv --split splits/sample_station_data_split.json --output-dir outputs/sec_run
 ```
 
-4. Search ARIMA orders if needed.
+4. Reproduce the ARIMA order selection procedure.
 
 ```bash
 python select_arima_order.py --data example_data/sample_station_data/sample_station_data.csv --split splits/sample_station_data_split.json --output outputs/arima_order_search.csv
 ```
 
-5. Calibrate and run HBV separately if needed.
+5. Reproduce the HBV calibration procedure.
 
 ```bash
 python run_hbv.py --data example_data/sample_station_data/sample_station_data.csv --split splits/sample_station_data_split.json --output-dir outputs/hbv_run
@@ -68,9 +64,10 @@ python run_hbv.py --data example_data/sample_station_data/sample_station_data.cs
 
 ## Notes
 
-- All train/validation/test partitions are time-ordered and stored as explicit split files.
-- `run_sec.py` uses 10 random seeds by default: `3407, 42, 2023, 2024, 2025, 2026, 2022, 2021, 2020, 2019`.
+- All train/validation/test partitions are time-ordered and stored explicitly in `splits/`.
+- `run_sec.py` uses the following 10 random seeds by default: `3407, 42, 2023, 2024, 2025, 2026, 2022, 2021, 2020, 2019`.
 - The default SEC batch size is 512.
-- `hbv_calibration_settings.yaml` documents the HBV calibration settings and bounds.
-- `arima_orders.csv` documents the final selected ARIMA order for each station after search.
-- Runtime output files under `outputs/` are examples only and do not need to be committed for manuscript review.
+- `arima_orders.csv` records the final ARIMA order used for each station after order search.
+- `hbv_calibration_settings.yaml` documents the HBV objective function, warm-up setting, parameter bounds, and optimization settings.
+- `hbv_calibrated_params.csv` is used to report the final calibrated HBV parameters.
+- Runtime output files under `outputs/` are not required for repository submission.
