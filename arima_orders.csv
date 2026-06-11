@@ -1,0 +1,3 @@
+station_id,p,d,q,selection_metric,fit_window,refit_interval
+sample_station_data,5,1,0,validation_MAE,730,10
+
