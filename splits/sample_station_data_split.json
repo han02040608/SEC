@@ -1,0 +1,17 @@
+{
+  "station_id": "sample_station_data",
+  "csv_path": "example_data/sample_station_data/sample_station_data.csv",
+  "train_start": 0,
+  "train_end": 255,
+  "val_start": 255,
+  "val_end": 309,
+  "test_start": 309,
+  "test_end": 365,
+  "train_ratio": 0.6986301369863014,
+  "val_ratio": 0.14794520547945206,
+  "test_ratio": 0.15342465753424658,
+  "seq_len": 7,
+  "pred_len": 1,
+  "target_column": "OT",
+  "date_column": "date"
+}
