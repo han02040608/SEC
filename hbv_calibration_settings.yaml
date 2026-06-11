@@ -1,0 +1,37 @@
+model: HBV-Enhanced
+objective: "Minimize 1 - NSE on calibration data"
+calibration_data: "train + validation"
+warmup: 30
+optimizer:
+  algorithm: differential_evolution
+  strategy: best1bin
+  maxiter: 300
+  popsize: 10
+  tol: 0.005
+  mutation: [0.5, 1.0]
+  recombination: 0.7
+  polish: true
+forcing_rules:
+  precipitation: 'column containing "prcp"'
+  temperature: 'mean of tmax and tmin when both exist'
+  pet: "radiation-based proxy using srad and dayl when available"
+parameter_bounds:
+  FC: [50.0, 2000.0]
+  BETA: [0.1, 5.0]
+  LP: [0.3, 1.0]
+  CFMAX: [0.1, 15.0]
+  K0: [0.0, 0.9]
+  K1: [0.01, 0.6]
+  K2: [0.001, 0.3]
+  PERC: [0.0, 10.0]
+  UZL: [0.0, 500.0]
+  Q_SCALE: [0.01, 500.0]
+  P_SCALE: [0.2, 4.0]
+  Q_BASE: [0.0, 1000.0]
+  TT: [-2.0, 2.0]
+  SFCF: [0.6, 1.5]
+  MAXBAS: [1.0, 7.0]
+  CFR: [0.0, 0.1]
+  CWH: [0.0, 0.2]
+  TT_DIFF: [0.0, 3.0]
+
